@@ -1,5 +1,22 @@
 aud1:
-  commits: "#ghep-testing"
-  issues: "#ghep-testing"
-  pulls: "#ghep-testing"
-  workflows: "#ghep-testing"
+  commits: "#ghep-testing-team1"
+  issues: "#ghep-testing-team1"
+  pulls: "#ghep-testing-team1"
+  workflows: "#ghep-testing-team1"
+aud2:
+  commits: "#ghep-testing-team2"
+  issues: "#ghep-testing-team2"
+  pulls: "#ghep-testing-team2"
+  workflows: "#ghep-testing-team2"
+  sources:
+    - source: workflows
+      channel: "#ghp-testing-team2"
+      config:
+        branches:
+          - main
+        workflows:
+          ignoreBots: true
+  digest:
+    channel: "#ghp-testing-team2"
+    day: monday
+    time: "13:00"
