@@ -1,9 +1,9 @@
-aud1:
+audun-ghep-test1:
   commits: "#ghep-testing-team1"
   issues: "#ghep-testing-team1"
   pulls: "#ghep-testing-team1"
   workflows: "#ghep-testing-team1"
-aud2:
+audun-ghep-test2:
   commits: "#ghep-testing-team2"
   issues: "#ghep-testing-team2"
   pulls: "#ghep-testing-team2"
