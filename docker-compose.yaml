@@ -1,0 +1,49 @@
+services:
+  ghep:
+    build:
+      context: .
+    image: ghcr.io/miljodir/ghep:local
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./localconfig:/config:ro
+    environment:
+      GITHUB_ORG: testmiljodir
+      REPOS_CONFIG_FILE_PATH: /config/teams-local.yaml
+      GHEP_SUBSCRIBE_TO_ORG: "false"
+      GITHUB_BLOCKLIST_REPOS: ""
+      EXTERNAL_CONTRIBUTORS_CHANNEL: ""
+      SERVER_ADDR: 0.0.0.0:8080
+      API_BASE_PATH: ""
+      PGURL: postgres://postgres:postgres@postgres:5432/ghep
+      GITHUB_APP_ID: "xx"
+      GITHUB_APP_INSTALLATION_ID: "yy"
+      GITHUB_APP_PRIVATE_KEY: |
+        -----xxx BEGIN RSA PRIVATE KEY-----
+        xxx
+        -----END RSA PRIVATE KEY-----
+      SLACK_TOKEN: "REPLACE_WITH_YOUR_SLACK_BOT_TOKEN"
+
+  postgres:
+    image: docker.io/postgres:18-alpine
+    environment:
+      POSTGRES_DB: ghep
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ghep"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  postgres-data:

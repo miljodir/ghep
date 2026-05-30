@@ -254,14 +254,52 @@ nada:
 
 ## Lokal utvikling
 
-Kjør opp Postgres for testing med Docker.
+Det ligger en lokal Compose-fil i repoet som bygger appen som `ghep:local` og starter Postgres 18.
 
-``` shell
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
-docker run --name adminer --link postgres:db -p 8081:8080 -d adminer
-psql -h localhost -U postgres -c 'CREATE DATABASE ghep;'
+1. Kopier `teams-local.yaml.example` til `teams-local.yaml` og legg inn teamene du vil teste med.
+2. Åpne `docker-compose.local.yaml` og erstatt plassholderne for `GITHUB_APP_ID`, `GITHUB_APP_INSTALLATION_ID`, `GITHUB_APP_PRIVATE_KEY` og `SLACK_TOKEN`.
+3. Start opp lokalt:
+
+```shell
+docker-compose up --build
 ```
 
-## Kontakt oss
+Appen eksponeres på `http://localhost:8080`, og Postgres på `localhost:5432`.
 
-Ta kontakt i `#ghep-værsågod` på Slack hvis du har noen spørsmål.
+## Nødvendig oppsett
+
+### Github app
+
+|Permission|Level|Why|
+|---|---|---|
+|Metadata|Read-only|Repository info, rename/public events, default branch info|
+|Contents|Read-only|Push/commit events|
+|Pull requests|Read-only|PR events and digest query for open PRs|
+|Issues|Read-only|Issue events|
+|Actions|Read-only|workflow_run events|
+|Code scanning alerts|Read-only|Security alert events|
+|Dependabot alerts|Read-only|Dependabot alert events|
+|Secret scanning alerts|Read-only|Secret scanning alert events|
+
+
+
+### Slack app
+
+**Required bot scopes**
+
+|Scope|Why|
+|---|---|
+|chat:write|Post and update messages|
+|reactions:write|Add/remove reactions|
+|reactions:read|Read existing reactions before replacing them|
+|conversations:read|List joined public/private channels|
+|channels:join|Join public channels|
+|users:read|List workspace users|
+|users:read.email|Read Slack profile emails for GitHub↔Slack user mapping|
+
+
+**Recommended bot scope**
+
+|Scope|Why|
+|---|---|
+|chat:write.public|Lets the bot post to public channels before it has joined them|
